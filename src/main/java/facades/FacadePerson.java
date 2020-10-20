@@ -46,7 +46,7 @@ public class FacadePerson {
     // Find person in DB by PhoneNumber
     // ToDo: Exception
     public PersonDTO getPersonByPhone(int phoneNumber){
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = getEntityManager();
         try{
             Phone phoneObject = em.find(Phone.class, phoneNumber);
             Person person = em.find(Person.class, phoneObject.getPId());
