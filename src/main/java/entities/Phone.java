@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Phone.findAll", query = "SELECT p FROM Phone p"),
     @NamedQuery(name = "Phone.findByNumber", query = "SELECT p FROM Phone p WHERE p.number = :number"),
-    @NamedQuery(name = "Phone.findByDescruotion", query = "SELECT p FROM Phone p WHERE p.descruotion = :descruotion")})
+    @NamedQuery(name = "Phone.findByDescription", query = "SELECT p FROM Phone p WHERE p.description = :description")})
 public class Phone implements Serializable {
 
     private static final long serialVersionUID = 1L;

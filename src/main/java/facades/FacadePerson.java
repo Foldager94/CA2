@@ -8,8 +8,10 @@ package facades;
 import dtos.PersonDTO;
 import entities.Person;
 import entities.Phone;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -61,6 +63,14 @@ public class FacadePerson {
             em.close();
         }
         
+    }
+    
+    public List<Person> getAllPersons(){
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Person> query =  em.createQuery("SELECT p FROM Person p",Person.class);
+        List<Person> personList = query.getResultList();
+        em.close();
+        return personList; 
     }
     
     

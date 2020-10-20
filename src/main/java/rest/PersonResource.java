@@ -8,7 +8,9 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.PersonDTO;
+import entities.Person;
 import facades.FacadePerson;
+import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -44,6 +46,7 @@ public class PersonResource {
     public PersonResource() {
     }
     
+    
     @GET
     @Path("phone/{number}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -51,7 +54,13 @@ public class PersonResource {
         PersonDTO personDTO = FACADE.getPersonByPhone(number);
         return GSON.toJson(personDTO);
     }
-    
+
+    @GET
+    @Path("all")
+    public String getAllPerson(){
+        List<Person> hej = FACADE.getAllPersons();
+        return GSON.toJson(hej);
+    }
     
     
     
@@ -72,7 +81,7 @@ public class PersonResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson() {
         //TODO return proper representation object
-        throw new UnsupportedOperationException();
+        return GSON.toJson("hej");
     }
 
     /**
