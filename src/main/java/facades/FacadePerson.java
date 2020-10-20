@@ -52,7 +52,8 @@ public class FacadePerson {
             Person person = em.find(Person.class, phoneObject.getPId());
             if (person == null) {
                 System.out.println("Person ikke fundet på telefonnummer");
-                throw new PersonNotFoundException("Requested Person does not exist");
+                throw new NullPointerException();
+                //throw new PersonNotFoundException("Requested Person does not exist");
             } else {
                 return new PersonDTO(person);
             }

@@ -39,8 +39,8 @@ public class Phone implements Serializable {
     @Column(name = "number")
     private Integer number;
     @Size(max = 45)
-    @Column(name = "descruotion")
-    private String descruotion;
+    @Column(name = "description")
+    private String description;
     @JoinColumn(name = "p_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Person pId;
@@ -60,12 +60,12 @@ public class Phone implements Serializable {
         this.number = number;
     }
 
-    public String getDescruotion() {
-        return descruotion;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescruotion(String descruotion) {
-        this.descruotion = descruotion;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Person getPId() {
