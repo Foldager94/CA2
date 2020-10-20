@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package facades;
+package dtos;
 
 /**
  *
  * @author ckfol
  */
-public class FacadePhone {
+public class PersonDTO {
     
 }
