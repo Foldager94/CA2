@@ -48,6 +48,11 @@ public class Phone implements Serializable {
     public Phone() {
     }
 
+    public Phone(Integer number, String description) {
+        this.number = number;
+        this.description = description;
+    }
+
     public Phone(Integer number) {
         this.number = number;
     }
@@ -75,7 +80,7 @@ public class Phone implements Serializable {
     public void setPId(Person pId) {
         this.pId = pId;
     }
-
+ 
     @Override
     public int hashCode() {
         int hash = 0;

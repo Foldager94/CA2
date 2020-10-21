@@ -1,7 +1,8 @@
 package facades;
 
+import entities.Cityinfo;
+import entities.Person;
 import utils.EMF_Creator;
-import entities.RenameMe;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.AfterAll;
@@ -27,6 +28,8 @@ public class FacadeExampleTest {
        emf2 = EMF_Creator.createEntityManagerFactory();
        emf = EMF_Creator.createEntityManagerFactoryForTest();
        facade = FacadePerson.getFacadePerson(emf);
+       
+       
     }
 
     @AfterAll
@@ -39,12 +42,20 @@ public class FacadeExampleTest {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
+         Cityinfo info = new Cityinfo(2510, "herlev");
+        
+        
+        
+       
         try {
             em.getTransaction().begin();
-            em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
-            em.persist(new RenameMe("Some txt", "More text"));
-            em.persist(new RenameMe("aaa", "bbb"));
-
+            em.persist(info);
+            em.getTransaction().commit();
+            
+            em.getTransaction().begin();
+            
+            facade.addPerson("Jan", "pop", "kka@lol.com", 20254547, "Hjemme", "hamlet", 2510, "ST.h");
+            facade.addPerson("Jan", "pop", "kka@lol.com", 20255555, "Hjemme", "hamlet", 2510, "ST.h");
             em.getTransaction().commit();
         } finally {
             em.close();

@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -59,12 +60,19 @@ public class Person implements Serializable {
     @ManyToMany(mappedBy = "personList")
     private List<Hobby> hobbyList;
     @JoinColumn(name = "a_id", referencedColumnName = "id")
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Address aId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pId")
     private List<Phone> phoneList;
 
     public Person() {
+    }
+
+    public Person(String email, String firstName, String lastName) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneList = new ArrayList<>();
     }
 
     public Person(Integer id) {
@@ -128,7 +136,14 @@ public class Person implements Serializable {
     public void setPhoneList(List<Phone> phoneList) {
         this.phoneList = phoneList;
     }
-
+    
+    public void addPhone(Phone person) {
+        phoneList.add(person);
+        if(person != null){
+            person.setPId(this);
+        }
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
