@@ -17,6 +17,7 @@ public class PersonDTO {
     private Integer id;
     private String fName;
     private String lName;
+    private String email;
     private List<Phone> phone;
     private String street;
     private String city;
@@ -27,12 +28,21 @@ public class PersonDTO {
         this.id = p.getId();
         this.fName = p.getFirstName();
         this.lName = p.getLastName();
+        this.email = p.getEmail();
         this.phone = p.getPhoneList();
         this.street = p.getAId().getStreet();
         this.city = p.getAId().getZipCode().getCity();
         this.zip = p.getAId().getZipCode().getZipCode();
         
 
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Integer getId() {

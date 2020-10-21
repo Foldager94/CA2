@@ -10,6 +10,7 @@ import entities.Address;
 import entities.Cityinfo;
 import entities.Person;
 import entities.Phone;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -61,6 +62,27 @@ public class FacadePerson {
             em.close();
         }
     }
+    
+      public PersonDTO editPerson(PersonDTO p) {
+        EntityManager em = emf.createEntityManager();
+        Person person = em.find(Person.class, p.getId());
+        if (person == null) {
+           
+        }
+        person.setFirstName(p.getfName());
+        person.setLastName(p.getlName());
+        person.setEmail(p.getEmail());
+        person.getAId().setStreet(p.getStreet());
+        person.getAId().getZipCode().setZipCode(p.getZip());
+        try {
+            em.getTransaction().begin();
+            em.merge(person);
+            em.getTransaction().commit();
+            return new PersonDTO(person);
+        } finally {
+            em.close();
+        }
+    }
 
     // Find person in DB by PhoneNumber
     // ToDo: Exception
@@ -68,7 +90,7 @@ public class FacadePerson {
         EntityManager em = getEntityManager();
         try {
             Phone phoneObject = em.find(Phone.class, phoneNumber);
-            Person person = em.find(Person.class, phoneObject.getPId());
+            Person person = em.find(Person.class, phoneObject.getPId().getId());
             if (person == null) {
                 System.out.println("Person ikke fundet på telefonnummer");
                 throw new NullPointerException();
@@ -88,7 +110,6 @@ public class FacadePerson {
         }
         EntityManager em = emf.createEntityManager();
         Person person = new Person(fName, lName, email);
-
         try {
             em.getTransaction().begin();
             Query q = em.createQuery("SELECT a FROM Address a WHERE a.street = :street AND a.zipCode = :zip AND a.additionalInfo = :additionalInfo");
@@ -110,7 +131,22 @@ public class FacadePerson {
         }
         return new PersonDTO(person);
     }
+    
+    
+    
 
+     public PersonDTO getPersonByID(int id) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Person PersonOBJ = em.find(Person.class, id);
+            return new PersonDTO(PersonOBJ);
+        } finally {
+            em.close();
+        }
+    }
+    
+    
+    
     public List<Person> getAllPersons() {
         EntityManager em = emf.createEntityManager();
         TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);

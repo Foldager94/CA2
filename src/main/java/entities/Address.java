@@ -110,7 +110,6 @@ public class Address implements Serializable {
     }
 
     public void setZipCode(Cityinfo zipCode) {
-       
         this.zipCode = zipCode;
     }
  public void addPerson(Person person) {

@@ -75,6 +75,13 @@ public class Person implements Serializable {
         this.phoneList = new ArrayList<>();
     }
 
+    public void removePhone(Phone phone) {
+        if (phone != null) {
+            phoneList.remove(phone);   
+        }
+
+    }
+
     public Person(Integer id) {
         this.id = id;
     }
@@ -136,14 +143,14 @@ public class Person implements Serializable {
     public void setPhoneList(List<Phone> phoneList) {
         this.phoneList = phoneList;
     }
-    
+
     public void addPhone(Phone person) {
         phoneList.add(person);
-        if(person != null){
+        if (person != null) {
             person.setPId(this);
         }
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -168,5 +175,5 @@ public class Person implements Serializable {
     public String toString() {
         return "entities.Person[ id=" + id + " ]";
     }
-    
+
 }
