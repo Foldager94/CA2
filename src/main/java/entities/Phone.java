@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Phone.findAll", query = "SELECT p FROM Phone p"),
     @NamedQuery(name = "Phone.findByNumber", query = "SELECT p FROM Phone p WHERE p.number = :number"),
-    @NamedQuery(name = "Phone.findByDescruotion", query = "SELECT p FROM Phone p WHERE p.descruotion = :descruotion")})
+    @NamedQuery(name = "Phone.findByDescription", query = "SELECT p FROM Phone p WHERE p.description = :description")})
 public class Phone implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,13 +39,18 @@ public class Phone implements Serializable {
     @Column(name = "number")
     private Integer number;
     @Size(max = 45)
-    @Column(name = "descruotion")
-    private String descruotion;
+    @Column(name = "description")
+    private String description;
     @JoinColumn(name = "p_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Person pId;
 
     public Phone() {
+    }
+
+    public Phone(Integer number, String description) {
+        this.number = number;
+        this.description = description;
     }
 
     public Phone(Integer number) {
@@ -60,12 +65,12 @@ public class Phone implements Serializable {
         this.number = number;
     }
 
-    public String getDescruotion() {
-        return descruotion;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescruotion(String descruotion) {
-        this.descruotion = descruotion;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Person getPId() {
@@ -75,7 +80,7 @@ public class Phone implements Serializable {
     public void setPId(Person pId) {
         this.pId = pId;
     }
-
+ 
     @Override
     public int hashCode() {
         int hash = 0;

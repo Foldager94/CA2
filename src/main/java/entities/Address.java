@@ -5,11 +5,13 @@
  */
 package entities;
 
+import facades.FacadePerson;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -54,9 +56,17 @@ public class Address implements Serializable {
     @JoinColumn(name = "zipCode", referencedColumnName = "zipCode")
     @ManyToOne
     private Cityinfo zipCode;
-
+   
     public Address() {
     }
+
+    public Address(String street, String additionalInfo, int zipcode) {
+        this.street = street;
+        this.additionalInfo = additionalInfo;
+        this.zipCode = FacadePerson.findZipCode(zipcode);
+    }
+    
+ 
 
     public Address(Integer id) {
         this.id = id;
@@ -101,6 +111,12 @@ public class Address implements Serializable {
 
     public void setZipCode(Cityinfo zipCode) {
         this.zipCode = zipCode;
+    }
+ public void addPerson(Person person) {
+        personList.add(person);
+        if(person != null){
+            person.setAId(this);
+        }
     }
 
     @Override

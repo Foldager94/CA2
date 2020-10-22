@@ -48,6 +48,11 @@ public class Cityinfo implements Serializable {
     public Cityinfo() {
     }
 
+    public Cityinfo(Integer zipCode, String city) {
+        this.zipCode = zipCode;
+        this.city = city;
+    }
+
     public Cityinfo(Integer zipCode) {
         this.zipCode = zipCode;
     }
@@ -77,6 +82,13 @@ public class Cityinfo implements Serializable {
         this.addressList = addressList;
     }
 
+     public void addAddress(Address a) {
+        addressList.add(a);
+        if(a != null){
+           a.setZipCode(this);
+        }
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
