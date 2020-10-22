@@ -56,7 +56,7 @@ public class Address implements Serializable {
     @JoinColumn(name = "zipCode", referencedColumnName = "zipCode")
     @ManyToOne
     private Cityinfo zipCode;
-   
+
     public Address() {
     }
 
@@ -65,8 +65,6 @@ public class Address implements Serializable {
         this.additionalInfo = additionalInfo;
         this.zipCode = FacadePerson.findZipCode(zipcode);
     }
-    
- 
 
     public Address(Integer id) {
         this.id = id;
@@ -112,9 +110,10 @@ public class Address implements Serializable {
     public void setZipCode(Cityinfo zipCode) {
         this.zipCode = zipCode;
     }
- public void addPerson(Person person) {
+
+    public void addPerson(Person person) {
         personList.add(person);
-        if(person != null){
+        if (person != null) {
             person.setAId(this);
         }
     }
@@ -143,5 +142,5 @@ public class Address implements Serializable {
     public String toString() {
         return "entities.Address[ id=" + id + " ]";
     }
-    
+
 }

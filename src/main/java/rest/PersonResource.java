@@ -17,6 +17,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
@@ -30,13 +31,12 @@ import utils.EMF_Creator;
  */
 @Path("person")
 public class PersonResource {
-    
+
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
-       
-    private static final FacadePerson FACADE =  FacadePerson.getFacadePerson(EMF);
+
+    private static final FacadePerson FACADE = FacadePerson.getFacadePerson(EMF);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    
-    
+
     @Context
     private UriInfo context;
 
@@ -45,8 +45,16 @@ public class PersonResource {
      */
     public PersonResource() {
     }
-    
-    
+
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String addPerson(String person) {
+        PersonDTO p = GSON.fromJson(person, PersonDTO.class);
+        PersonDTO newPerson = FACADE.addPerson(p);
+        return GSON.toJson(newPerson);
+    }
+
     @GET
     @Path("phone/{number}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -57,24 +65,14 @@ public class PersonResource {
 
     @GET
     @Path("all")
-    public String getAllPerson(){
+    public String getAllPerson() {
         List<Person> hej = FACADE.getAllPersons();
         return GSON.toJson(hej);
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     /**
      * Retrieves representation of an instance of rest.PersonResource
+     *
      * @return an instance of java.lang.String
      */
     @GET
@@ -86,6 +84,7 @@ public class PersonResource {
 
     /**
      * PUT method for updating or creating an instance of PersonResource
+     *
      * @param content representation for the resource
      */
     @PUT

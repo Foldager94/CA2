@@ -6,11 +6,11 @@
 package facades;
 
 import dtos.PersonDTO;
+import dtos.PhoneDTO;
 import entities.Address;
 import entities.Cityinfo;
 import entities.Person;
 import entities.Phone;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -26,6 +26,8 @@ public class FacadePerson {
     private static FacadePerson instance;
     private static EntityManagerFactory emf;
 
+    private FacadePhone facadePhone = FacadePhone.getFacadePhone(emf);
+    
     //Private Constructor to ensure Singleton
     private FacadePerson() {
     }
@@ -62,12 +64,12 @@ public class FacadePerson {
             em.close();
         }
     }
-    
-      public PersonDTO editPerson(PersonDTO p) {
+
+    public PersonDTO editPerson(PersonDTO p) {
         EntityManager em = emf.createEntityManager();
         Person person = em.find(Person.class, p.getId());
         if (person == null) {
-           
+
         }
         person.setFirstName(p.getfName());
         person.setLastName(p.getlName());
@@ -104,26 +106,32 @@ public class FacadePerson {
 
     }
 
-    public PersonDTO addPerson(String fName, String lName, String email, int phone, String description, String street, int zip, String additionalInfo) {
-        if ((fName.length() == 0) || (lName.length() == 0)) {
+    public PersonDTO addPerson(PersonDTO p) {
+        if ((p.getfName().length() == 0) || (p.getlName().length() == 0)) {
             //throw new MissingInputException("first name or/and last name missing");
         }
         EntityManager em = emf.createEntityManager();
-        Person person = new Person(fName, lName, email);
+        Person person = new Person(p.getEmail(), p.getfName(), p.getlName());
         try {
             em.getTransaction().begin();
             Query q = em.createQuery("SELECT a FROM Address a WHERE a.street = :street AND a.zipCode = :zip AND a.additionalInfo = :additionalInfo");
-            q.setParameter("street", street);
-            q.setParameter("zip", findZipCode(zip));
-            q.setParameter("additionalInfo", additionalInfo);
+            q.setParameter("street", p.getStreet());
+            q.setParameter("zip", findZipCode(p.getZip()));
+            q.setParameter("additionalInfo", p.getAdditionalInfo());
             List<Address> adressess = q.getResultList();
             if (adressess.size() > 0) {
                 person.setAId(adressess.get(0));
             } else {
-                Address address = new Address(street, additionalInfo, zip);
+                Address address = new Address(p.getStreet(), p.getAdditionalInfo(), p.getZip());
                 person.setAId(address);
             }
-            person.addPhone(new Phone(phone, description));
+
+            for (PhoneDTO phone : p.getPhoneList()) {
+                if (!facadePhone.phoneExists(phone)) {
+                    person.addPhone(new Phone(phone.getNumber(), phone.getDescription()));
+                } 
+            }
+
             em.persist(person);
             em.getTransaction().commit();
         } finally {
@@ -131,11 +139,8 @@ public class FacadePerson {
         }
         return new PersonDTO(person);
     }
-    
-    
-    
 
-     public PersonDTO getPersonByID(int id) {
+    public PersonDTO getPersonByID(int id) {
         EntityManager em = emf.createEntityManager();
         try {
             Person PersonOBJ = em.find(Person.class, id);
@@ -144,9 +149,7 @@ public class FacadePerson {
             em.close();
         }
     }
-    
-    
-    
+
     public List<Person> getAllPersons() {
         EntityManager em = emf.createEntityManager();
         TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);

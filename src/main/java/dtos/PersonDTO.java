@@ -7,6 +7,7 @@ package dtos;
 
 import entities.Person;
 import entities.Phone;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,27 +15,54 @@ import java.util.List;
  * @author ckfol
  */
 public class PersonDTO {
+
     private Integer id;
     private String fName;
     private String lName;
     private String email;
-    private List<Phone> phone;
+    private List<PhoneDTO> phoneList;
     private String street;
+    private String additionalInfo;
     private String city;
     private int zip;
 
-    
     public PersonDTO(Person p) {
         this.id = p.getId();
         this.fName = p.getFirstName();
         this.lName = p.getLastName();
         this.email = p.getEmail();
-        this.phone = p.getPhoneList();
+        this.phoneList = new ArrayList<>();
+
+        for (Phone phone : p.getPhoneList()) {
+            this.phoneList.add(new PhoneDTO(phone));
+        }
+        
         this.street = p.getAId().getStreet();
+        this.additionalInfo = p.getAId().getAdditionalInfo();
         this.city = p.getAId().getZipCode().getCity();
         this.zip = p.getAId().getZipCode().getZipCode();
-        
 
+    }
+
+    public List<PhoneDTO> getPhoneList() {
+        return phoneList;
+    }
+
+    public void setPhoneList(List<PhoneDTO> phoneList) {
+        this.phoneList = phoneList;
+    }
+
+//    public void addPhone(int number, String description) {
+//        PhoneDTO phone = new PhoneDTO(number, description);
+//        phoneList.add(phone);
+//    }
+
+    public String getAdditionalInfo() {
+        return additionalInfo;
+    }
+
+    public void setAdditionalInfo(String additionalInfo) {
+        this.additionalInfo = additionalInfo;
     }
 
     public String getEmail() {
@@ -69,14 +97,6 @@ public class PersonDTO {
         this.lName = lName;
     }
 
-    public List<Phone> getPhone() {
-        return phone;
-    }
-
-    public void setPhone(List<Phone> phone) {
-        this.phone = phone;
-    }
-
     public String getStreet() {
         return street;
     }
@@ -100,7 +120,5 @@ public class PersonDTO {
     public void setZip(int zip) {
         this.zip = zip;
     }
-    
-    
-    
+
 }

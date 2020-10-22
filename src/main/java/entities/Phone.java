@@ -7,6 +7,7 @@ package entities;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -42,7 +43,7 @@ public class Phone implements Serializable {
     @Column(name = "description")
     private String description;
     @JoinColumn(name = "p_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Person pId;
 
     public Phone() {
@@ -80,7 +81,7 @@ public class Phone implements Serializable {
     public void setPId(Person pId) {
         this.pId = pId;
     }
- 
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -105,5 +106,5 @@ public class Phone implements Serializable {
     public String toString() {
         return "entities.Phone[ number=" + number + " ]";
     }
-    
+
 }

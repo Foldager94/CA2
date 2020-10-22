@@ -77,7 +77,7 @@ public class Person implements Serializable {
 
     public void removePhone(Phone phone) {
         if (phone != null) {
-            phoneList.remove(phone);   
+            phoneList.remove(phone);
         }
 
     }
@@ -144,10 +144,10 @@ public class Person implements Serializable {
         this.phoneList = phoneList;
     }
 
-    public void addPhone(Phone person) {
-        phoneList.add(person);
-        if (person != null) {
-            person.setPId(this);
+    public void addPhone(Phone phone) {
+        phoneList.add(phone);
+        if (phone != null) {
+            phone.setPId(this);
         }
     }
 

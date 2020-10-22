@@ -1,8 +1,11 @@
 package facades;
 
 import dtos.PersonDTO;
+import entities.Address;
 import entities.Cityinfo;
 import entities.Person;
+import entities.Phone;
+import java.util.List;
 import utils.EMF_Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,22 +20,30 @@ import org.junit.jupiter.api.Test;
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
 public class FacadeExampleTest {
-    
+
     private static EntityManagerFactory emf;
- 
+
     private static FacadePerson facade;
-    private PersonDTO p1;
-    private PersonDTO p2;
+    private PersonDTO pDTO1;
+    private PersonDTO pDTO2;
     private PersonDTO p3;
+    private PersonDTO p4;
+
     public FacadeExampleTest() {
     }
 
     @BeforeAll
     public static void setUpClass() {
-        
+
         emf = EMF_Creator.createEntityManagerFactoryForTest();
         facade = FacadePerson.getFacadePerson(emf);
-        
+        EntityManager em = emf.createEntityManager();
+
+        Cityinfo info = new Cityinfo(2510, "herlev");
+        em.getTransaction().begin();
+        em.persist(info);
+        em.getTransaction().commit();
+
     }
 
     @AfterAll
@@ -40,28 +51,33 @@ public class FacadeExampleTest {
 //        Clean up database after test is done or use a persistence unit with drop-and-create to start up clean on every test
     }
 
-    // Setup the DataBase in a known state BEFORE EACH TEST
-    //TODO -- Make sure to change the script below to use YOUR OWN entity class
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
-        Cityinfo info = new Cityinfo(2510, "herlev");
-        Person p = new Person("Jon", "papi", "kalkun@lol.com");
+
+        Person p1 = new Person("kalkun@lol.com", "Jon", "papi");
+        Person p2 = new Person("kylling@lol.com", "Jane", "mutti");
+        Address a = new Address("Overgade", "13", 2510);
+        p1.setAId(a);
+        p1.addPhone(new Phone(32663266, "Arbejde"));
+        p2.setAId(a);
+        p2.addPhone(new Phone(45771817, "Arbejde"));
+        pDTO1 = new PersonDTO(p1);
+        pDTO2 = new PersonDTO(p2);
+
         try {
             em.getTransaction().begin();
 
             em.createQuery("DELETE from Phone").executeUpdate();
             em.createQuery("DELETE from Person").executeUpdate();
             em.createQuery("DELETE from Address").executeUpdate();
-            em.createQuery("DELETE from Cityinfo").executeUpdate();
-            em.persist(info);
+            //em.createQuery("DELETE from Cityinfo").executeUpdate();
+            // em.persist(p);
+            em.getTransaction().commit();
 
-            em.getTransaction().commit();
-            em.getTransaction().begin();
-            p1 = facade.addPerson("jon", "papi", "kalkun@lole.com", 5214584, "arbejds", "aleris", 2510, "ST.V");
-            p2 = facade.addPerson("Jan", "pop", "kka@lol.com", 20255555, "Hjemme", "hamlet", 2510, "ST.h");
-            p3 = facade.getPersonByID(p1.getId());
-            em.getTransaction().commit();
+            pDTO1 = facade.addPerson(pDTO1);
+            pDTO2 = facade.addPerson(pDTO2);
+            p3 = facade.getPersonByID(pDTO1.getId());
         } finally {
             em.close();
         }
@@ -69,22 +85,24 @@ public class FacadeExampleTest {
 
     @Test
     public void testGetPersonByPhone() {
-        assertEquals(facade.getPersonByPhone(20255555).getPhone(), p2.getPhone());
+        assertEquals(facade.getPersonByPhone(32663266).getId(), pDTO1.getId());
     }
 
     @Test
     public void testGetPersonByID() {
-        assertEquals(p2.getId(), facade.getPersonByID(p2.getId()).getId());
+        assertEquals(pDTO1.getId(), facade.getPersonByID(pDTO1.getId()).getId());
     }
-    
+
     @Test
-    public void testEditPerson(){
-        assertEquals(facade.editPerson(p1).getId(), p3.getId());
+    public void testEditPerson() {
+        assertEquals(facade.editPerson(pDTO1).getId(), p3.getId());
     }
- @Test
-    public void testEditPerson2(){
-        assertNotEquals(facade.editPerson(p1).getId(), p3.getId());
+
+    @Test
+    public void testEditPerson2() {
+        assertNotEquals(facade.editPerson(pDTO1).getId(), pDTO2.getId());
     }
+
     @AfterEach
     public void tearDown() {
 //        Remove any data after each test was run
