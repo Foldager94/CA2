@@ -52,11 +52,6 @@ public class PersonDTO {
         this.phoneList = phoneList;
     }
 
-//    public void addPhone(int number, String description) {
-//        PhoneDTO phone = new PhoneDTO(number, description);
-//        phoneList.add(phone);
-//    }
-
     public String getAdditionalInfo() {
         return additionalInfo;
     }

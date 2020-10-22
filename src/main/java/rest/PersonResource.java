@@ -87,8 +87,26 @@ public class PersonResource {
      *
      * @param content representation for the resource
      */
+//    @PUT
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public void putJson(String content) {
+//    }
     @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void putJson(String content) {
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String updatePerson(@PathParam("id") int id, String person) {
+        PersonDTO personDTO = GSON.fromJson(person, PersonDTO.class);
+        personDTO.setId(id);
+        PersonDTO updatePerson = FACADE.editPerson(personDTO);
+        return GSON.toJson(updatePerson);
+
+//    @POST
+//    @Produces({MediaType.APPLICATION_JSON})
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    public String addPerson(String person) {
+//        PersonDTO p = GSON.fromJson(person, PersonDTO.class);
+//        PersonDTO newPerson = FACADE.addPerson(p);
+//        return GSON.toJson(newPerson);
     }
 }

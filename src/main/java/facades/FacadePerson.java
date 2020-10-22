@@ -76,11 +76,18 @@ public class FacadePerson {
         person.setEmail(p.getEmail());
         person.getAId().setStreet(p.getStreet());
         person.getAId().getZipCode().setZipCode(p.getZip());
+        for (PhoneDTO phone : p.getPhoneList()) {
+                if (!facadePhone.phoneExists(phone)) {
+                    person.addPhone(new Phone(phone.getNumber(), phone.getDescription()));
+                } 
+            }
         try {
             em.getTransaction().begin();
             em.merge(person);
             em.getTransaction().commit();
             return new PersonDTO(person);
+            
+            
         } finally {
             em.close();
         }
