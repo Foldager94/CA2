@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -65,6 +66,17 @@ public class Hobby implements Serializable {
 
     public Hobby() {
     }
+
+    public Hobby(String name, String wikiLink, String category, String type) {
+        this.id = id;
+        this.name = name;
+        this.wikiLink = wikiLink;
+        this.category = category;
+        this.type = type;
+        this.personList = new ArrayList<>();
+    }
+    
+    
 
     public Hobby(Integer id) {
         this.id = id;

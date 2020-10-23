@@ -7,8 +7,10 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.HobbyDTO;
 import dtos.PersonDTO;
 import entities.Person;
+import facades.FacadeHobby;
 import facades.FacadePerson;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
@@ -34,7 +36,7 @@ public class PersonResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
 
-    private static final FacadePerson FACADE = FacadePerson.getFacadePerson(EMF);
+    private static final FacadePerson FACADE_PERSON = FacadePerson.getFacadePerson(EMF);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @Context
@@ -51,7 +53,7 @@ public class PersonResource {
     @Consumes({MediaType.APPLICATION_JSON})
     public String addPerson(String person) {
         PersonDTO p = GSON.fromJson(person, PersonDTO.class);
-        PersonDTO newPerson = FACADE.addPerson(p);
+        PersonDTO newPerson = FACADE_PERSON.addPerson(p);
         return GSON.toJson(newPerson);
     }
 
@@ -59,17 +61,20 @@ public class PersonResource {
     @Path("phone/{number}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getPersonByPhone(@PathParam("number") int number) {
-        PersonDTO personDTO = FACADE.getPersonByPhone(number);
+        PersonDTO personDTO = FACADE_PERSON.getPersonByPhone(number);
         return GSON.toJson(personDTO);
     }
+    
+    
 
     @GET
     @Path("all")
     public String getAllPerson() {
-        List<Person> hej = FACADE.getAllPersons();
+        List<Person> hej = FACADE_PERSON.getAllPersons();
         return GSON.toJson(hej);
     }
 
+    
     /**
      * Retrieves representation of an instance of rest.PersonResource
      *
@@ -98,7 +103,7 @@ public class PersonResource {
     public String updatePerson(@PathParam("id") int id, String person) {
         PersonDTO personDTO = GSON.fromJson(person, PersonDTO.class);
         personDTO.setId(id);
-        PersonDTO updatePerson = FACADE.editPerson(personDTO);
+        PersonDTO updatePerson = FACADE_PERSON.editPerson(personDTO);
         return GSON.toJson(updatePerson);
 
 //    @POST

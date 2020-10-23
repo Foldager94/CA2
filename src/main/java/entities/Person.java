@@ -150,6 +150,13 @@ public class Person implements Serializable {
             phone.setPId(this);
         }
     }
+    
+    public void addHobby(Hobby hobby){
+        if(hobby != null){
+            this.hobbyList.add(hobby);
+            hobby.getPersonList().add(this);
+        }
+    }
 
     @Override
     public int hashCode() {

@@ -1,8 +1,10 @@
 package facades;
 
+import dtos.HobbyDTO;
 import dtos.PersonDTO;
 import entities.Address;
 import entities.Cityinfo;
+import entities.Hobby;
 import entities.Person;
 import entities.Phone;
 import java.util.List;
@@ -23,11 +25,19 @@ public class FacadeExampleTest {
 
     private static EntityManagerFactory emf;
 
-    private static FacadePerson facade;
+    private static FacadePerson facade_person;
+    private static FacadeHobby facade_hobby;
+
     private PersonDTO pDTO1;
     private PersonDTO pDTO2;
     private PersonDTO p3;
     private PersonDTO p4;
+    private HobbyDTO hDTO1;
+    private HobbyDTO hDTO2;
+    private Hobby h1;
+    private Hobby h2;
+    private Hobby h3;
+
 
     public FacadeExampleTest() {
     }
@@ -36,12 +46,19 @@ public class FacadeExampleTest {
     public static void setUpClass() {
 
         emf = EMF_Creator.createEntityManagerFactoryForTest();
-        facade = FacadePerson.getFacadePerson(emf);
-        EntityManager em = emf.createEntityManager();
+        facade_person = FacadePerson.getFacadePerson(emf);
+        facade_hobby = FacadeHobby.getFacadeHobby(emf);
 
+        EntityManager em = emf.createEntityManager();
+        h1 = new Hobby("Fægtning","wiki.com","Bøssesport","Sovende");
+        h2 = new Hobby("Skydning","wiki.com","Bøssesport","Dansende");
+        h3 = new Hobby("TræFældning","wiki.com","Endnu mere Bøssesport","Stående");
         Cityinfo info = new Cityinfo(2510, "herlev");
         em.getTransaction().begin();
         em.persist(info);
+        em.persist(h1);
+        em.persist(h2);
+        em.persist(h3);
         em.getTransaction().commit();
 
     }
@@ -57,6 +74,8 @@ public class FacadeExampleTest {
 
         Person p1 = new Person("kalkun@lol.com", "Jon", "papi");
         Person p2 = new Person("kylling@lol.com", "Jane", "mutti");
+        
+
         Address a = new Address("Overgade", "13", 2510);
         p1.setAId(a);
         p1.addPhone(new Phone(32663266, "Arbejde"));
@@ -64,6 +83,9 @@ public class FacadeExampleTest {
         p2.addPhone(new Phone(45771817, "Arbejde"));
         pDTO1 = new PersonDTO(p1);
         pDTO2 = new PersonDTO(p2);
+        
+        hDTO1 = new HobbyDTO(h1);
+        hDTO2 = new HobbyDTO(h2);
 
         try {
             em.getTransaction().begin();
@@ -73,11 +95,16 @@ public class FacadeExampleTest {
             em.createQuery("DELETE from Address").executeUpdate();
             //em.createQuery("DELETE from Cityinfo").executeUpdate();
             // em.persist(p);
+            
+            em.persist(h1);
             em.getTransaction().commit();
 
-            pDTO1 = facade.addPerson(pDTO1);
-            pDTO2 = facade.addPerson(pDTO2);
-            p3 = facade.getPersonByID(pDTO1.getId());
+            pDTO1 = facade_person.addPerson(pDTO1);
+            pDTO2 = facade_person.addPerson(pDTO2);
+            facade_hobby.addHobbyToPerson(pDTO1, hDTO1);
+            facade_hobby.addHobbyToPerson(pDTO2, hDTO2);
+
+            p3 = facade_person.getPersonByID(pDTO1.getId());
         } finally {
             em.close();
         }
@@ -85,22 +112,31 @@ public class FacadeExampleTest {
 
     @Test
     public void testGetPersonByPhone() {
-        assertEquals(facade.getPersonByPhone(32663266).getId(), pDTO1.getId());
+        assertEquals(facade_person.getPersonByPhone(32663266).getId(), pDTO1.getId());
     }
 
     @Test
     public void testGetPersonByID() {
-        assertEquals(pDTO1.getId(), facade.getPersonByID(pDTO1.getId()).getId());
+        assertEquals(pDTO1.getId(), facade_person.getPersonByID(pDTO1.getId()).getId());
     }
 
     @Test
     public void testEditPerson() {
-        assertEquals(facade.editPerson(pDTO1).getId(), p3.getId());
+        assertEquals(facade_person.editPerson(pDTO1).getId(), p3.getId());
     }
 
     @Test
     public void testEditPerson2() {
-        assertNotEquals(facade.editPerson(pDTO1).getId(), pDTO2.getId());
+        assertNotEquals(facade_person.editPerson(pDTO1).getId(), pDTO2.getId());
+    }
+    
+    @Test
+    public void testAddHobbyToPerson(){
+    }
+    
+    @Test
+    public void testGetHobbyByName(){
+        assertEquals(hDTO1.getId(), facade_hobby.getHobbyByName("Fægtning").getId());
     }
 
     @AfterEach
