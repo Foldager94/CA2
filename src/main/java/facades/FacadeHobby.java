@@ -77,7 +77,7 @@ public class FacadeHobby {
         EntityManager em = emf.createEntityManager();
         try {
             TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h WHERE h.name = :name", Hobby.class);
-            query.setParameter("name", name);
+            query.setParameter("name", name);           
             HobbyDTO hobby = new HobbyDTO(query.getSingleResult());
             return hobby.getPersonList();
         } finally {

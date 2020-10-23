@@ -127,10 +127,10 @@ public class FacadeExampleTest {
         assertNotEquals(facade_person.editPerson(pDTO1).getId(), pDTO2.getId());
     }
 
-//    @Test
-//    public void testAddHobbyToPerson() {
-//        assertEquals();
-//    }
+    @Test
+    public void testAddHobbyToPerson() {        
+        assertEquals(facade_hobby.getAllPersonsWithHobby(hDTO1.getName()).get(0).getId(), pDTO1.getId());
+    }
 
     @Test
     public void testGetHobbyByName() {
