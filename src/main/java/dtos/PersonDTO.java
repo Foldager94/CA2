@@ -33,9 +33,9 @@ public class PersonDTO {
         this.email = p.getEmail();
         this.phoneList = new ArrayList<>();
 
-        for (Phone phone : p.getPhoneList()) {
+        p.getPhoneList().forEach(phone -> {
             this.phoneList.add(new PhoneDTO(phone));
-        }
+        });
         
         this.street = p.getAId().getStreet();
         this.additionalInfo = p.getAId().getAdditionalInfo();

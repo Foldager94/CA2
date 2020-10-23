@@ -63,6 +63,15 @@ public class HobbyResource {
         return GSON.toJson(hobbydto);
     }
     
+    
+    @GET
+    @Path("/all/{name}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getAllPersons(@PathParam("name")String name){
+        
+        return GSON.toJson(FACADE_HOBBY.getAllPersonsWithHobby(name));
+    }
+    
     /*@POST
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})

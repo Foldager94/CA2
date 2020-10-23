@@ -38,7 +38,6 @@ public class FacadeExampleTest {
     private Hobby h2;
     private Hobby h3;
 
-
     public FacadeExampleTest() {
     }
 
@@ -50,15 +49,10 @@ public class FacadeExampleTest {
         facade_hobby = FacadeHobby.getFacadeHobby(emf);
 
         EntityManager em = emf.createEntityManager();
-        h1 = new Hobby("Fægtning","wiki.com","Bøssesport","Sovende");
-        h2 = new Hobby("Skydning","wiki.com","Bøssesport","Dansende");
-        h3 = new Hobby("TræFældning","wiki.com","Endnu mere Bøssesport","Stående");
+
         Cityinfo info = new Cityinfo(2510, "herlev");
         em.getTransaction().begin();
         em.persist(info);
-        em.persist(h1);
-        em.persist(h2);
-        em.persist(h3);
         em.getTransaction().commit();
 
     }
@@ -74,8 +68,9 @@ public class FacadeExampleTest {
 
         Person p1 = new Person("kalkun@lol.com", "Jon", "papi");
         Person p2 = new Person("kylling@lol.com", "Jane", "mutti");
-        
-
+        h1 = new Hobby("Fægtning", "wiki.com", "Bøssesport", "Sovende");
+        h2 = new Hobby("Skydning", "wiki.com", "Bøssesport", "Dansende");
+        h3 = new Hobby("TræFældning", "wiki.com", "Endnu mere Bøssesport", "Stående");
         Address a = new Address("Overgade", "13", 2510);
         p1.setAId(a);
         p1.addPhone(new Phone(32663266, "Arbejde"));
@@ -83,9 +78,6 @@ public class FacadeExampleTest {
         p2.addPhone(new Phone(45771817, "Arbejde"));
         pDTO1 = new PersonDTO(p1);
         pDTO2 = new PersonDTO(p2);
-        
-        hDTO1 = new HobbyDTO(h1);
-        hDTO2 = new HobbyDTO(h2);
 
         try {
             em.getTransaction().begin();
@@ -93,18 +85,23 @@ public class FacadeExampleTest {
             em.createQuery("DELETE from Phone").executeUpdate();
             em.createQuery("DELETE from Person").executeUpdate();
             em.createQuery("DELETE from Address").executeUpdate();
+            em.createQuery("DELETE from Hobby").executeUpdate();
             //em.createQuery("DELETE from Cityinfo").executeUpdate();
             // em.persist(p);
-            
-            em.persist(h1);
-            em.getTransaction().commit();
 
+            em.persist(h1);
+            em.persist(h2);
+            em.getTransaction().commit();
+            hDTO1 = new HobbyDTO(h1);
+            hDTO2 = new HobbyDTO(h2);
             pDTO1 = facade_person.addPerson(pDTO1);
             pDTO2 = facade_person.addPerson(pDTO2);
-            facade_hobby.addHobbyToPerson(pDTO1, hDTO1);
-            facade_hobby.addHobbyToPerson(pDTO2, hDTO2);
+            hDTO1 = facade_hobby.addHobbyToPerson(pDTO1, hDTO1);
+            hDTO2 = facade_hobby.addHobbyToPerson(pDTO2, hDTO2);
 
             p3 = facade_person.getPersonByID(pDTO1.getId());
+        } catch (Exception e) {
+            e.getMessage();
         } finally {
             em.close();
         }
@@ -129,13 +126,14 @@ public class FacadeExampleTest {
     public void testEditPerson2() {
         assertNotEquals(facade_person.editPerson(pDTO1).getId(), pDTO2.getId());
     }
-    
+
+//    @Test
+//    public void testAddHobbyToPerson() {
+//        assertEquals();
+//    }
+
     @Test
-    public void testAddHobbyToPerson(){
-    }
-    
-    @Test
-    public void testGetHobbyByName(){
+    public void testGetHobbyByName() {
         assertEquals(hDTO1.getId(), facade_hobby.getHobbyByName("Fægtning").getId());
     }
 

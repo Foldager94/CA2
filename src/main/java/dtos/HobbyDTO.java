@@ -6,6 +6,8 @@
 package dtos;
 
 import entities.Hobby;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -18,6 +20,7 @@ public class HobbyDTO {
     private String wikilink;
     private String category;
     private String type;
+    private List<PersonDTO> personList;
 
     public HobbyDTO(Hobby h) {
         this.id = h.getId();
@@ -25,6 +28,11 @@ public class HobbyDTO {
         this.wikilink = h.getWikiLink();
         this.category = h.getCategory();
         this.type = h.getType();
+        this.personList = new ArrayList();
+        
+         h.getPersonList().forEach(person -> {
+            this.personList.add(new PersonDTO(person));
+        });
     }
 
     public int getId() {
@@ -33,6 +41,14 @@ public class HobbyDTO {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public List<PersonDTO> getPersonList() {
+        return personList;
+    }
+
+    public void setPersonList(List<PersonDTO> personList) {
+        this.personList = personList;
     }
 
     public String getName() {
