@@ -48,6 +48,14 @@ public class PersonResource {
     public PersonResource() {
     }
 
+    @Path("/{id}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getPersonId(@PathParam("id") int id){
+        PersonDTO p = FACADE_PERSON.getPersonByID(id);
+        return GSON.toJson(p);
+    }
+    
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
