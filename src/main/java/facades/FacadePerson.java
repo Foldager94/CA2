@@ -26,7 +26,7 @@ public class FacadePerson {
     private static FacadePerson instance;
     private static EntityManagerFactory emf;
 
-    private FacadePhone facadePhone = FacadePhone.getFacadePhone(emf);
+    private final FacadePhone facadePhone = FacadePhone.getFacadePhone(emf);
     
     //Private Constructor to ensure Singleton
     private FacadePerson() {
@@ -157,12 +157,14 @@ public class FacadePerson {
         }
     }
 
-    public List<Person> getAllPersons() {
+    public PersonDTO getAllPersons() {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);
-        List<Person> personList = query.getResultList();
-        em.close();
-        return personList;
+        try {
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);
+            return new PersonDTO(query.getResultList());
+        } finally {
+            em.close();
+        }
     }
 
 }

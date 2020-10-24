@@ -36,7 +36,7 @@ public class PersonDTO {
         p.getPhoneList().forEach(phone -> {
             this.phoneList.add(new PhoneDTO(phone));
         });
-        
+
         this.street = p.getAId().getStreet();
         this.additionalInfo = p.getAId().getAdditionalInfo();
         this.city = p.getAId().getZipCode().getCity();
@@ -114,6 +114,13 @@ public class PersonDTO {
 
     public void setZip(int zip) {
         this.zip = zip;
+    }
+    List<PersonDTO> all = new ArrayList();
+
+    public PersonDTO(List<Person> personEntities) {
+        personEntities.forEach((p) -> {
+            all.add(new PersonDTO(p));
+        });
     }
 
 }
