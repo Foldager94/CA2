@@ -75,11 +75,12 @@ public class PersonResource {
     
     
 
+      @Path("all")
     @GET
-    @Path("all")
-    public String getAllPerson() {
-        List<Person> hej = FACADE_PERSON.getAllPersons();
-        return GSON.toJson(hej);
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getAll() {
+        PersonDTO persons = FACADE_PERSON.getAllPersons();
+        return GSON.toJson(persons);
     }
 
     
